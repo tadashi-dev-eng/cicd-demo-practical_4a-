@@ -121,7 +121,7 @@ jobs:
             --sarif-file-output=snyk-code.sarif
 
       - name: Upload SARIF results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: snyk-${{ matrix.scan-type }}.sarif
@@ -173,7 +173,7 @@ jobs:
             --sarif-file-output=snyk-container.sarif
 
       - name: Upload container scan results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: snyk-container.sarif

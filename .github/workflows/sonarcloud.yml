@@ -36,7 +36,7 @@ jobs:
       - name: Build and run tests with coverage
         run: mvn clean verify
 
-      - name: SonarCloud Scan
+      - name: SonarCloud Scan with Quality Gate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for PR decoration
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -44,4 +44,13 @@ jobs:
           mvn sonar:sonar \
             -Dsonar.projectKey=${{ secrets.SONAR_ORGANIZATION }}_cicd-demo-practical_4a- \
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.qualitygate.wait=true
+
+      - name: Quality Gate Status Check
+        if: failure()
+        run: |
+          echo "❌ Quality Gate Failed!"
+          echo "Check SonarCloud dashboard for details:"
+          echo "https://sonarcloud.io/dashboard?id=${{ secrets.SONAR_ORGANIZATION }}_cicd-demo-practical_4a-"
+          exit 1

@@ -42,8 +42,6 @@ This ensures each SARIF upload is treated as a distinct category by the CodeQL u
 
 Note: the workflow runs Snyk in a matrix (dependencies, code). I updated both matrix SARIF uploads to include `${{ github.run_id }}` and the `matrix.scan-type` in the category so each matrix axis produces a unique category (for example `snyk-dependencies-123456789` and `snyk-code-123456789`).
 
-To be robust across workflow re-runs and attempts, the SARIF categories now also include `${{ github.run_attempt }}` so uploads across retries remain unique (e.g., `snyk-code-123456789-1`).
-
 ## Slack disabled
 
 Slack notifications have been intentionally disabled for this repository's CI to avoid external dependencies. The workflow will still create a GitHub issue when critical vulnerabilities are detected. If you want Slack notifications later, add the secret `SLACK_WEBHOOK_URL` and I can re-enable the Slack step.

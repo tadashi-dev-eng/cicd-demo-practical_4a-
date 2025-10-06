@@ -39,3 +39,5 @@ with:
 ```
 
 This ensures each SARIF upload is treated as a distinct category by the CodeQL upload action and avoids the collision error.
+
+Note: the workflow runs Snyk in a matrix (dependencies, code). I updated both matrix SARIF uploads to include `${{ github.run_id }}` and the `matrix.scan-type` in the category so each matrix axis produces a unique category (for example `snyk-dependencies-123456789` and `snyk-code-123456789`).

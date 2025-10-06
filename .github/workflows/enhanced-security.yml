@@ -160,7 +160,8 @@ jobs:
         if: steps.check-sarif.outputs.sarif-exists == 'true'
         with:
           sarif_file: snyk-${{ matrix.scan-type }}.sarif
-          category: snyk-${{ matrix.scan-type }}
+          # Use a unique category per run and matrix axis to avoid multiple SARIF runs colliding
+          category: snyk-${{ matrix.scan-type }}-${{ github.run_id }}
 
       - name: Archive security scan results
         uses: actions/upload-artifact@v4

@@ -161,7 +161,7 @@ jobs:
         with:
           sarif_file: snyk-${{ matrix.scan-type }}.sarif
           # Use a unique category per run and matrix axis to avoid multiple SARIF runs colliding
-          category: snyk-${{ matrix.scan-type }}-${{ github.run_id }}
+          category: snyk-${{ matrix.scan-type }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Archive security scan results
         uses: actions/upload-artifact@v4
@@ -224,7 +224,7 @@ jobs:
         with:
           sarif_file: snyk-container.sarif
           # Use a unique category per run to avoid multiple SARIF runs colliding
-          category: snyk-container-${{ github.run_id }}
+          category: snyk-container-${{ github.run_id }}-${{ github.run_attempt }}
 
   # Monitor deployed dependencies (only on main branch)
   monitor:

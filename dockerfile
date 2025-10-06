@@ -1,6 +1,7 @@
-# Use a Java base image
-FROM openjdk:17-oracle
+# Use a more secure Java base image
+FROM eclipse-temurin:17-jre-alpine
 
+# Security-focused Spring Boot deployment
 # https://medium.com/@skywalkerhunter/aws-docker-deploy-spring-boot-fe05a00191d9
 # added on 31st Oct
 LABEL maintainer="Darryl Ng <darryl1975@hotmail.com>"
@@ -9,11 +10,21 @@ LABEL description="Dockerfile for deploying to Beanstalk needs dockerrun.aws.jso
 # added on 31st Oct
 #RUN rm -rf /usr/local/tomcat/webapps/*
 
+# Create a non-root user for security
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the Spring Boot application JAR file into the Docker image
 COPY target/cicd-demo-0.0.1-SNAPSHOT.jar /app/cicd-demo-0.0.1-SNAPSHOT.jar
+
+# Change ownership to the non-root user
+RUN chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
 
 # added on 31st Oct
 #COPY target/cicd-demo-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/cicd-demo-0.0.1-SNAPSHOT.war

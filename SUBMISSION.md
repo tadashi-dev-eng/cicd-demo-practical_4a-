@@ -184,6 +184,23 @@ Evidence:
 - Configure branch protection rules to block merges on failing Quality Gates.
 - Set up webhooks or integrations for notifications (Slack/Teams/email).
 
+### Note about Quality Gate failures and CI behaviour
+
+During CI runs we observed `QUALITY GATE STATUS: FAILED` which causes `mvn sonar:sonar` to return a non-zero exit code and fail the build. To make failures clearer and to include the failing conditions in CI logs, the workflow was updated to:
+
+- Run Sonar analysis without blocking (set `sonar.qualitygate.wait=false`), then
+- Query the SonarCloud API (`/api/qualitygates/project_status`) to fetch the Quality Gate result and failing conditions, and
+- Fail the job with a clear message and conditions list if the gate failed.
+
+This change provides clearer error messages in CI logs and makes it easier to include the exact failing metrics and messages in your submission screenshots. The updated workflow is in `.github/workflows/sonarcloud.yml`.
+
+Remediation steps when the Quality Gate fails:
+
+1. Open the SonarCloud dashboard for the project and inspect the Quality Gate widget.
+2. In SonarCloud, go to Issues and filter by New Code or by the metric listed in the failed condition (e.g., coverage, vulnerabilities).
+3. Fix or triage issues (mark false-positives where appropriate), add tests to improve coverage, and push a new commit to re-run analysis.
+4. Re-run the GitHub Action and capture new screenshots showing the gate passing.
+
 ## Final notes
 
 If you want, I can add the example `sonar-project.properties` and the workflow to this repository and create a `SUBMISSION.md` commit (this file), or I can also prepare a PR that demonstrates creating/triggering security issues for capture (temporary demonstration only).

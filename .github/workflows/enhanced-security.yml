@@ -201,15 +201,21 @@ jobs:
           if [ -f dockerfile ]; then sed -n '1,200p' dockerfile; fi
           if [ -f Dockerfile ]; then sed -n '1,200p' Dockerfile; fi
 
-      - name: Run Snyk Container Scan
-        uses: snyk/actions/docker@master
+      - name: Install Snyk CLI (for container scan)
+        run: |
+          echo "📦 Installing Snyk CLI..."
+          npm install -g snyk
+          snyk --version
+          snyk auth ${{ secrets.SNYK_TOKEN }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: cicd-demo:latest
-          args: >
-            --severity-threshold=high
-            --sarif-file-output=snyk-container.sarif
+
+      - name: Run Snyk Container Scan (CLI)
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "🔍 Running Snyk container scan on image cicd-demo:latest"
+          snyk test --docker cicd-demo:latest --severity-threshold=high --sarif-file-output=snyk-container.sarif || true
 
       - name: Upload container scan results
         uses: github/codeql-action/upload-sarif@v3

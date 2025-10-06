@@ -222,7 +222,8 @@ jobs:
         if: always()
         with:
           sarif_file: snyk-container.sarif
-          category: snyk-container
+          # Use a unique category per run to avoid multiple SARIF runs colliding
+          category: snyk-container-${{ github.run_id }}
 
   # Monitor deployed dependencies (only on main branch)
   monitor:

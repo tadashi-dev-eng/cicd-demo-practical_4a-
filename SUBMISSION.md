@@ -23,3 +23,19 @@ args: >
 ```
 
 If you want me to push these changes and re-run the workflow for you, say so and I'll push the commit to `main` (or create a PR).
+
+## SARIF upload collision fix
+
+During upload of SARIF results we encountered the error: "The CodeQL Action does not support uploading multiple SARIF runs with the same category." This happens when multiple scan jobs attempt to upload SARIF files with the identical `category` value (e.g., `snyk-container`) in the same repository run history.
+
+Fix applied:
+
+- Updated `.github/workflows/enhanced-security.yml` to set a unique category per run using `${{ github.run_id }}`. Example:
+
+```yaml
+with:
+  sarif_file: snyk-container.sarif
+  category: snyk-container-${{ github.run_id }}
+```
+
+This ensures each SARIF upload is treated as a distinct category by the CodeQL upload action and avoids the collision error.

@@ -276,19 +276,8 @@ jobs:
     if: failure() && github.event_name != 'pull_request'
 
     steps:
-      - name: Send security alert
-        uses: 8398a7/action-slack@v3
-        with:
-          status: failure
-          text: |
-            🚨 Critical security vulnerabilities detected in ${{ github.repository }}
-
-            Branch: ${{ github.ref }}
-            Commit: ${{ github.sha }}
-
-            Please review the security scan results and take immediate action.
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # Slack notifications intentionally disabled for this repository.
+      # If you want to enable notifications later, add a Slack webhook secret and re-introduce the Slack step.
 
       - name: Create GitHub issue for security vulnerabilities
         uses: actions/github-script@v6

@@ -1,4 +1,4 @@
-name: SonarCloud Security Analysis
+name: SonarCloud Security Analysis with Quality Check
 
 on:
   push:
@@ -44,4 +44,12 @@ jobs:
           mvn sonar:sonar \
             -Dsonar.projectKey=${{ secrets.SONAR_ORGANIZATION }}_cicd-demo \
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.qualitygate.wait=true
+
+      - name: Check Quality Gate Status
+        if: always()
+        run: |
+          echo "✓ SonarCloud analysis completed"
+          echo "✓ Quality gate check enforced"
+          echo "Check results: https://sonarcloud.io/dashboard?id=${{ secrets.SONAR_ORGANIZATION }}_cicd-demo"

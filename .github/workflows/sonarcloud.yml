@@ -1,4 +1,4 @@
-name: SonarCloud Security Analysis with Quality Check
+name: SonarCloud Security Analysis
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  sonarcloud:
-    name: SonarCloud SAST Scan
+  build-and-analyze:
+    name: Build and SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: SonarCloud Scan
+      - name: SonarCloud Scan with Quality Gate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -47,9 +47,8 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.qualitygate.wait=true
 
-      - name: Check Quality Gate Status
-        if: always()
+      - name: Verify Quality Gate Passed
+        if: success()
         run: |
-          echo "✓ SonarCloud analysis completed"
-          echo "✓ Quality gate check enforced"
-          echo "Check results: https://sonarcloud.io/dashboard?id=${{ secrets.SONAR_ORGANIZATION }}_cicd-demo"
+          echo "✅ Quality gate check PASSED"
+          echo "✅ Code meets security standards"

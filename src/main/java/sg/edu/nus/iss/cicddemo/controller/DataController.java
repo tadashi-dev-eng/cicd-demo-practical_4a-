@@ -1,4 +1,4 @@
-package sg.edu.nus.iss.cicddemo.Controller;
+package sg.edu.nus.iss.cicddemo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.datafaker.Faker;
 
 @RestController
-public class DataController {
+public
+class DataController {
     @GetMapping("/")
     public String healthCheck() {
         return "HEALTH CHECK OK!";
